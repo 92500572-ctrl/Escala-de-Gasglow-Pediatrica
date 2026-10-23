@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f3">
+  <meta name="description" content="Calculadora orientativa de la escala de Glasgow pediátrica.">
+  <title>Escala de Glasgow pediátrica</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #311829;
+      --muted: #73646f;
+      --paper: #f7f3f5;
+      --surface: #fff;
+      --line: #e5dce5;
+      --green: #661d50;
+      --green-soft: #f1e2eb;
+      --coral: #b33871;
+      --coral-soft: #ffe9fa;
+      --gold: #8a1b7b;
+      --gold-soft: #fbdff4;
+      --shadow: 0 16px 44px rgb(29 56 46 / 8%);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(ellipse at 8% 0%, rgb(209 231 216 / 60%), transparent 34rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+
+    .topbar {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px clamp(20px, 5vw, 72px);
+      border-bottom: 1px solid rgb(24 49 45 / 10%);
+    }
+
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; }
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      aspect-ratio: 1;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--green);
+      color: white;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    .top-note { color: var(--muted); font-size: 13px; }
+
+    main {
+      width: min(1120px, calc(100% - 40px));
+      margin: 48px auto 40px;
+    }
+
+    .intro { margin-bottom: 28px; }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 700px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(34px, 5vw, 52px);
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 1.08;
+    }
+
+    .intro-copy { max-width: 660px; margin: 13px 0 0; color: var(--muted); }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      align-items: start;
+      gap: 26px;
+    }
+
+    .assessment {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .section-block {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 4px 18px rgb(29 56 46 / 3%);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 19px 13px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-heading h2 { margin: 0; font-size: 17px; }
+    .section-heading span { color: var(--muted); font-size: 12px; }
+
+    .scale-options { display: grid; }
+    .scale-option {
+      position: relative;
+      display: grid;
+      grid-template-columns: 34px 1fr 20px;
+      align-items: center;
+      gap: 13px;
+      min-height: 57px;
+      padding: 9px 19px;
+      border-bottom: 1px solid #edf1ed;
+      cursor: pointer;
+      transition: background 140ms ease;
+    }
+
+    .scale-option:last-child { border-bottom: 0; }
+    .scale-option:hover { background: #f7faf7; }
+    .scale-option:has(input:checked) { background: var(--green-soft); }
+    .scale-option input { position: absolute; opacity: 0; pointer-events: none; }
+    .points {
+      display: grid;
+      width: 30px;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: white;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .scale-option:has(input:checked) .points { border-color: var(--green); background: var(--green); color: white; }
+    .option-copy { font-size: 14px; }
+    .option-check { color: transparent; font-size: 17px; font-weight: 800; }
+    .scale-option:has(input:checked) .option-check { color: var(--green); }
+    .scale-option:focus-within { outline: 3px solid #94c6af; outline-offset: -3px; }
+
+    .mode-control {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      margin: 14px 19px 12px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #f5f7f5;
+    }
+
+    .mode-control button {
+      min-height: 34px;
+      padding: 5px 12px;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .mode-control button[aria-pressed="true"] { background: white; color: var(--ink); box-shadow: 0 1px 4px rgb(24 49 45 / 13%); font-weight: 700; }
+    .mode-control button:focus-visible, .reset:focus-visible { outline: 3px solid #94c6af; outline-offset: 2px; }
+
+    .result-panel {
+      position: sticky;
+      top: 20px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .result-top { padding: 20px; border-bottom: 1px solid var(--line); }
+    .result-label { margin: 0; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .total-line { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 0; }
+    .total { font-family: Georgia, "Times New Roman", serif; font-size: 68px; line-height: 1.08; }
+    .out-of { color: var(--muted); font-size: 14px; }
+    .classification { display: inline-block; margin-top: 12px; padding: 5px 10px; border-radius: 4px; background: var(--green-soft); color: var(--green); font-size: 12px; font-weight: 800; }
+    .classification.moderate { background: var(--gold-soft); color: var(--gold); }
+    .classification.severe { background: var(--coral-soft); color: var(--coral); }
+    .result-message { min-height: 43px; margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+
+    .breakdown { padding: 8px 20px 16px; }
+    .breakdown-row { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid #edf1ed; font-size: 13px; }
+    .breakdown-row:last-child { border-bottom: 0; }
+    .breakdown-row span:last-child { font-weight: 800; }
+    .reset {
+      width: calc(100% - 40px);
+      min-height: 40px;
+      margin: 0 20px 20px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: white;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .reset:hover { background: #f5f8f5; }
+
+    .notice {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border-left: 3px solid var(--coral);
+      background: #fff8f4;
+      color: #684638;
+      font-size: 13px;
+    }
+    .notice strong { color: #52352a; }
+    .notice-mark { color: var(--coral); font-weight: 900; }
+
+    footer { padding: 0 20px 30px; color: var(--muted); text-align: center; font-size: 12px; }
+
+    @media (max-width: 760px) {
+      .topbar { min-height: 58px; }
+      .top-note { display: none; }
+      main { margin-top: 34px; }
+      .workspace { grid-template-columns: 1fr; }
+      .result-panel { position: static; grid-row: 1; }
+      .total { font-size: 58px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">GCS</span><span>Apoyo clínico pediátrico</span></div>
+    <span class="top-note">Evaluación del nivel de conciencia</span>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Evaluación neurológica</p>
+      <h1 id="page-title">Escala de Glasgow pediátrica</h1>
+      <p class="intro-copy">Registra la mejor respuesta observada en cada componente. En la respuesta verbal, selecciona la escala según el desarrollo y la capacidad de comunicación del paciente.</p>
+    </section>
+
+    <div class="workspace">
+      <form class="assessment" id="assessment" aria-label="Evaluación de Glasgow pediátrica">
+        <section class="section-block" aria-labelledby="eye-title">
+          <div class="section-heading"><h2 id="eye-title">Apertura ocular</h2><span>Máximo 4 puntos</span></div>
+          <div class="scale-options">
+            <label class="scale-option"><input type="radio" name="eye" value="4"><span class="points">4</span><span class="option-copy">Espontánea</span><span class="option-check" aria-hidden="true">✓</span></label>
+            <label class="scale-option"><input type="radio" name="eye" value="3"><span class="points">3</span><span class="option-copy">A la voz o al sonido</span><span class="option-check" aria-hidden="true">✓</span></label>
+            <label class="scale-option"><input type="radio" name="eye" value="2"><span class="points">2</span><span class="option-copy">A la presión</span><span class="option-check" aria-hidden="true">✓</span></label>
+            <label class="scale-option"><input type="radio" name="eye" value="1"><span class="points">1</span><span class="option-copy">Ninguna</span><span class="option-check" aria-hidden="true">✓</span></label>
+          </div>
+        </section>
+
+        <section class="section-block" aria-labelledby="verbal-title">
+          <div class="section-heading"><h2 id="verbal-title">Respuesta verbal</h2><span>Máximo 5 puntos</span></div>
+          <div class="mode-control" role="group" aria-label="Tipo de respuesta verbal">
+            <button type="button" data-mode="preverbal" aria-pressed="true">Preverbal</button>
+            <button type="button" data-mode="verbal" aria-pressed="false">Verbal</button>
+          </div>
+          <div class="scale-options" id="verbal-options" aria-live="polite"></div>
+        </section>
+
+        <section class="section-block" aria-labelledby="motor-title">
+          <div class="section-heading"><h2 id="motor-title">Respuesta motora</h2><span>Máximo 6 puntos</span></div>
+          <div class="scale-options">
+            <label class="scale-option"><input type="radio" name="motor" value="6"><span class="points">6</span><span class="option-copy">Movimiento espontáneo apropiado / obedece órdenes</span><span class="option-check" aria-hidden="true">✓</span></label>
+            <label class="scale-option"><input type="radio" name="motor" value="5"><span class="points">5</span><span class="option-copy">Localiza el estímulo doloroso</span><span class="option-check" aria-hidden="true">✓</span></label>
+            <label class="scale-option"><input type="radio" name="motor" value="4"><span class="points">4</span><span class="option-copy">Retira ante el estímulo doloroso</span><span class="option-check" aria-hidden="true">✓</span></label>
+            <label class="scale-option"><input type="radio" name="motor" value="3"><span class="points">3</span><span class="option-copy">Flexión anormal</span><span class="option-check" aria-hidden="true">✓</span></label>
+            <label class="scale-option"><input type="radio" name="motor" value="2"><span class="points">2</span><span class="option-copy">Extensión anormal</span><span class="option-check" aria-hidden="true">✓</span></label>
+            <label class="scale-option"><input type="radio" name="motor" value="1"><span class="points">1</span><span class="option-copy">Ninguna</span><span class="option-check" aria-hidden="true">✓</span></label>
+          </div>
+        </section>
+      </form>
+
+      <aside class="result-panel" aria-labelledby="result-title">
+        <div class="result-top" aria-live="polite" aria-atomic="true">
+          <p class="result-label" id="result-title">Puntuación total</p>
+          <p class="total-line"><span class="total" id="total">—</span><span class="out-of">/ 15</span></p>
+          <span class="classification" id="classification">Sin completar</span>
+          <p class="result-message" id="result-message">Selecciona una respuesta en cada componente.</p>
+        </div>
+        <div class="breakdown" aria-label="Desglose de puntuación">
+          <div class="breakdown-row"><span>Ocular (O)</span><span id="eye-score">—</span></div>
+          <div class="breakdown-row"><span>Verbal (V)</span><span id="verbal-score">—</span></div>
+          <div class="breakdown-row"><span>Motora (M)</span><span id="motor-score">—</span></div>
+        </div>
+        <button class="reset" id="reset" type="button">Restablecer evaluación</button>
+      </aside>
+    </div>
+
+    <aside class="notice" role="note">
+      <span class="notice-mark" aria-hidden="true">!</span>
+      <div><strong>Uso orientativo.</strong> Esta herramienta no sustituye el juicio clínico ni los protocolos locales. Interpreta la puntuación según la edad, el desarrollo, el contexto y posibles factores que alteren la respuesta. Una puntuación baja o un deterioro del estado de conciencia requiere valoración clínica urgente.</div>
+    </aside>
+  </main>
+  <footer>Registra también los componentes por separado (O, V, M), no solo la suma total.</footer>
+
+  <script>
+    const verbalScales = {
+      preverbal: [
+        [5, "Sonríe, balbucea o interactúa apropiadamente"],
+        [4, "Llora, pero se calma"],
+        [3, "Irritable o llora persistentemente"],
+        [2, "Agitado; inconsolable"],
+        [1, "Ninguna respuesta"]
+      ],
+      verbal: [
+        [5, "Orientado y conversa apropiadamente"],
+        [4, "Confuso, pero conversa"],
+        [3, "Palabras inapropiadas"],
+        [2, "Sonidos incomprensibles"],
+        [1, "Ninguna respuesta"]
+      ]
+    };
+
+    const form = document.querySelector("#assessment");
+    const verbalOptions = document.querySelector("#verbal-options");
+    const modeButtons = document.querySelectorAll("[data-mode]");
+    let verbalMode = "preverbal";
+
+    function renderVerbalOptions() {
+      verbalOptions.replaceChildren();
+      for (const [score, description] of verbalScales[verbalMode]) {
+        const label = document.createElement("label");
+        label.className = "scale-option";
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "verbal";
+        input.value = String(score);
+        const points = document.createElement("span");
+        points.className = "points";
+        points.textContent = String(score);
+        const copy = document.createElement("span");
+        copy.className = "option-copy";
+        copy.textContent = description;
+        const check = document.createElement("span");
+        check.className = "option-check";
+        check.setAttribute("aria-hidden", "true");
+        check.textContent = "✓";
+        label.append(input, points, copy, check);
+        verbalOptions.append(label);
+      }
+    }
+
+    function updateScore() {
+      const components = ["eye", "verbal", "motor"].map((name) =>
+        Number(form.querySelector(`input[name="${name}"]:checked`)?.value || 0)
+      );
+      const complete = components.every((score) => score > 0);
+      const total = components.reduce((sum, score) => sum + score, 0);
+      document.querySelector("#eye-score").textContent = components[0] || "—";
+      document.querySelector("#verbal-score").textContent = components[1] || "—";
+      document.querySelector("#motor-score").textContent = components[2] || "—";
+      document.querySelector("#total").textContent = complete ? total : "—";
+
+      const classification = document.querySelector("#classification");
+      const message = document.querySelector("#result-message");
+      classification.className = "classification";
+      if (!complete) {
+        classification.textContent = "Sin completar";
+        message.textContent = "Selecciona una respuesta en cada componente.";
+      } else if (total <= 8) {
+        classification.textContent = "Compromiso grave";
+        classification.classList.add("severe");
+        message.textContent = "Requiere valoración clínica urgente.";
+      } else if (total <= 12) {
+        classification.textContent = "Compromiso moderado";
+        classification.classList.add("moderate");
+        message.textContent = "Interpreta junto con la evaluación clínica.";
+      } else {
+        classification.textContent = "Compromiso leve";
+        message.textContent = "Interpreta junto con la evaluación clínica.";
+      }
+    }
+
+    modeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        verbalMode = button.dataset.mode;
+        modeButtons.forEach((option) => option.setAttribute("aria-pressed", String(option === button)));
+        renderVerbalOptions();
+        updateScore();
+      });
+    });
+
+    form.addEventListener("change", updateScore);
+    document.querySelector("#reset").addEventListener("click", () => {
+      form.reset();
+      updateScore();
+    });
+
+    renderVerbalOptions();
+    updateScore();
+  </script>
+</body>
+</html>
