@@ -236,6 +236,30 @@
     .notice strong { color: #52352a; }
     .notice-mark { color: var(--coral); font-weight: 900; }
 
+    .references {
+      overflow: hidden;
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: 0 4px 18px rgb(29 56 46 / 3%);
+    }
+
+    .references-body {
+      padding: 12px 19px 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .references-body ol {
+      margin: 0;
+      padding-left: 1.35rem;
+      display: grid;
+      gap: 8px;
+    }
+
+    .references-body li { line-height: 1.55; }
+
     footer { padding: 0 20px 30px; color: var(--muted); text-align: center; font-size: 12px; }
 
     @media (max-width: 760px) {
@@ -262,7 +286,7 @@
     <section class="intro" aria-labelledby="page-title">
       <p class="eyebrow">Evaluación neurológica</p>
       <h1 id="page-title">Escala de Glasgow pediátrica</h1>
-      <p class="intro-copy">Registra la mejor respuesta observada en cada componente. En la respuesta verbal, selecciona la escala según el desarrollo y la capacidad de comunicación del paciente.</p>
+      <p class="intro-copy">Registra la mejor respuesta observada en cada componente. En la respuesta verbal, selecciona la escala según el desarrollo y la capacidad de comunicación del paciente. La herramienta es orientativa y debe interpretarse en el contexto clínico.</p>
     </section>
 
     <div class="workspace">
@@ -317,8 +341,19 @@
 
     <aside class="notice" role="note">
       <span class="notice-mark" aria-hidden="true">!</span>
-      <div><strong>Uso orientativo.</strong> Esta herramienta no sustituye el juicio clínico ni los protocolos locales. Interpreta la puntuación según la edad, el desarrollo, el contexto y posibles factores que alteren la respuesta. Una puntuación baja o un deterioro del estado de conciencia requiere valoración clínica urgente.</div>
+      <div><strong>Uso orientativo.</strong> Esta herramienta no sustituye el juicio clínico ni los protocolos locales. Interpreta la puntuación según la edad, el desarrollo, el contexto y la evolución del paciente.</div>
     </aside>
+
+    <section class="references" aria-labelledby="references-title">
+      <div class="section-heading"><h2 id="references-title">Referencias</h2><span>Escala de Glasgow</span></div>
+      <div class="references-body">
+        <ol>
+          <li>Teasdale G, Jennett B. Assessment of coma and impaired consciousness. A practical scale. Lancet. 1974;304(7872):81–84.</li>
+          <li>Teasdale G, Jennett B. Assessment and prognosis of coma after head injury. Acta Neurochir (Wien). 1976;34(1–4):45–55.</li>
+          <li>Recomendaciones clínicas y protocolos locales para la adaptación pediátrica de la escala de Glasgow, en función de la edad y el desarrollo del niño.</li>
+        </ol>
+      </div>
+    </section>
   </main>
   <footer>Registra también los componentes por separado (O, V, M), no solo la suma total.</footer>
 
